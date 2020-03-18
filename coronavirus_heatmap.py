@@ -24,14 +24,18 @@ state_names = states['Region']
 
 p_data = (data.query('State in @state_names')
             .reset_index(drop=True)
-            .filter(items=['State','Cases'])
+            .filter(items=['State','Cases','Deaths'])
             .merge(states, how = 'left', left_on = ['State'], right_on = ['Region'])
-            .filter(items = ['USPS','Cases']))
+            .filter(items = ['USPS','Cases','Deaths']))
 
 p_data['Cases'] = pd.to_numeric(p_data['Cases'])
-p_data.columns = ['State','Cases']
+p_data['Deaths'] = pd.to_numeric(p_data['Deaths'])
 
-# Plot and save choropleth map
+p_data = p_data.assign(Mortality_Rate = lambda x: x.Deaths/x.Cases*100)
+
+p_data.columns = ['State','Cases','Deaths','Mortality Rate (%)']
+
+# Plot and save cases map
 df = p_data
 
 fig = px.choropleth(df, locations= "State",
@@ -44,3 +48,16 @@ fig = px.choropleth(df, locations= "State",
 fig.update_layout(title = 'Coronavirus Confirmed Cases in the US by State')
 
 plotly.offline.plot(fig, filename = 'Coronavirus_Map.html', auto_open=False)
+
+# Plot and save mortality rate map
+
+fig = px.choropleth(df, locations= "State",
+                    locationmode="USA-states",
+                    color= "Mortality Rate (%)",
+                    scope="usa",
+                    range_color=[p_data['Mortality Rate (%)'].min(),p_data['Mortality Rate (%)'].max()],
+                    color_continuous_scale=px.colors.sequential.thermal)
+
+fig.update_layout(title = 'Coronavirus Mortality Rate (%) in the US by State')
+
+plotly.offline.plot(fig, filename = 'Coronavirus_Mortality_Rate_Map.html', auto_open=False)

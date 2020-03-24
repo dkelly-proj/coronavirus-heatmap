@@ -10,7 +10,7 @@ import requests
 # Fetch case data from wikipedia
 url = 'https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_the_United_States'
 
-data = pd.read_html(requests.get(url).content)[3]
+data = pd.read_html(requests.get(url).content)[4]
 data.columns = ['Drop','State','Cases','Recoveries','Deaths','Remaining','Source']
 
 # Fetch state abbreviations from wikipedia

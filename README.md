@@ -4,4 +4,4 @@ Clone this repository and run coronavirus_heatmap.py to scrape case data from wi
 
 Requires plotly, pandas, and requests.
 
-### Note: The Wikipedia source data changes its structure frequently, I will update as often as possible but will likely change to a new ### source in the near future.
+### Note: The Wikipedia source data changes its structure frequently, I will update as often as possible but will likely change to a new source in the near future.
